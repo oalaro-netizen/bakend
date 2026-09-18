@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bakend — Auth Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0b1120;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .app { width: 100%; max-width: 480px; }
+
+    .header { text-align: center; margin-bottom: 24px; }
+    .header h1 { color: #38bdf8; font-size: 1.6rem; }
+    .header p { color: #64748b; font-size: 0.9rem; margin-top: 4px; }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 28px 24px;
+    }
+
+    .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: #0f172a; border-radius: 8px; padding: 4px; }
+    .tab {
+      flex: 1; text-align: center; padding: 10px; border-radius: 6px; cursor: pointer;
+      font-weight: 600; font-size: 0.9rem; color: #94a3b8; border: none; background: transparent;
+      transition: all 0.2s;
+    }
+    .tab.active { background: #38bdf8; color: #0f172a; }
+    .tab:hover:not(.active) { color: #e2e8f0; }
+
+    .form-group { margin-bottom: 14px; position: relative; }
+    label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 5px; }
+    input {
+      width: 100%; padding: 11px 38px 11px 12px; border: 1px solid #334155; border-radius: 8px;
+      background: #0f172a; color: #e2e8f0; font-size: 0.95rem; transition: border-color 0.2s;
+    }
+    input:focus { outline: none; border-color: #38bdf8; }
+    input.error { border-color: #ef4444; }
+    .toggle-pw {
+      position: absolute; right: 10px; top: 33px; background: none; border: none;
+      color: #64748b; cursor: pointer; font-size: 0.9rem; padding: 4px; line-height: 1;
+    }
+    .toggle-pw:hover { color: #e2e8f0; }
+    .error-msg { color: #fca5a5; font-size: 0.78rem; margin-top: 4px; display: none; }
+    .error-msg.show { display: block; }
+
+    button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+    .btn-primary { background: #38bdf8; color: #0f172a; margin-top: 4px; }
+    .btn-primary:hover { background: #0ea5e9; }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-google {
+      background: #1e293b; color: #e2e8f0; border: 1px solid #475569; margin-top: 12px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-google:hover { background: #2d3a4f; }
+    .btn-google:disabled { opacity: 0.5; cursor: not-allowed; }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid transparent; border-top-color: currentColor;
+      border-radius: 50%; animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .status-bar {
+      padding: 10px 14px; border-radius: 8px; margin-bottom: 16px;
+      font-size: 0.9rem; text-align: center;
+    }
+    .status-bar.logged-in { background: #064e3b; color: #6ee7b7; }
+    .status-bar.logged-out { background: #7f1d1d; color: #fca5a5; }
+
+    .dashboard .info-grid { display: grid; gap: 10px; margin-bottom: 16px; }
+    .info-item { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; }
+    .info-item .label { font-size: 0.72rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+    .info-item .value { font-size: 0.9rem; margin-top: 4px; color: #f1f5f9; word-break: break-all; }
+    .btn-row { display: flex; gap: 8px; }
+    .btn-row button { flex: 1; }
+    .btn-secondary { background: #475569; color: #e2e8f0; }
+    .btn-secondary:hover { background: #64748b; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-danger:hover { background: #b91c1c; }
+
+    .api-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .api-grid button { font-size: 0.78rem; padding: 10px; }
+
+    pre {
+      background: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px;
+      overflow-x: auto; font-size: 0.78rem; color: #a5f3fc;
+      max-height: 260px; overflow-y: auto;
+      white-space: pre-wrap; word-break: break-word;
+    }
+
+    .hidden { display: none !important; }
+    .mt-12 { margin-top: 12px; }
+    .text-center { text-align: center; }
+    .text-sm { font-size: 0.8rem; color: #94a3b8; margin-top: 12px; }
+    .text-sm a { color: #38bdf8; cursor: pointer; text-decoration: none; }
+    .text-sm a:hover { text-decoration: underline; }
+    .divider { text-align: center; color: #475569; font-size: 0.75rem; margin-top: 12px; }
+
+    .success-msg { color: #6ee7b7; font-size: 0.85rem; text-align: center; margin-top: 8px; display: none; }
+    .success-msg.show { display: block; }
+
+    @media (max-width: 520px) {
+      body { padding: 12px; }
+      .card { padding: 20px 16px; }
+      .api-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>🛠️ Bakend API</h1>
+      <p>Authentication demo with JWT</p>
+    </div>
+
+    <div id="statusBar" class="status-bar logged-out">Not authenticated</div>
+
+    <!-- Auth Card -->
+    <div id="authCard" class="card">
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="login">Login</button>
+        <button class="tab" data-tab="register">Register</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+          <div class="error-msg" id="loginEmailErr"></div>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" placeholder="Enter your password" autocomplete="current-password" />
+          <button type="button" class="toggle-pw" data-target="loginPassword" aria-label="Show password">👁</button>
+          <div class="error-msg" id="loginPasswordErr"></div>
+        </div>
+        <button type="submit" class="btn-primary" id="loginBtn">Login</button>
+        <div class="divider">— or —</div>
+        <button type="button" class="btn-google" id="loginGoogleBtn">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/>
+            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+            <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.4-4.5 2.4-7.2 2.4-5.3 0-9.7-3.4-11.3-8l-6.5 5C9.6 39.6 16.2 44 24 44z"/>
+            <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.7 2-2 3.7-3.7 5l6.2 5.2c-.4.4 6.2-4.5 6.2-14.2 0-1.3-.1-2.4-.4-3.5z"/>
+          </svg>
+          Continue with Google
+        </button>
+        <div class="text-sm text-center">Don't have an account? <a id="showRegister">Register</a></div>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="hidden" novalidate>
+        <div class="form-group">
+          <label for="regName">Full Name</label>
+          <input id="regName" type="text" placeholder="John Doe" autocomplete="name" />
+          <div class="error-msg" id="regNameErr"></div>
+        </div>
+        <div class="form-group">
+          <label for="regEmail">Email</label>
+          <input id="regEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+          <div class="error-msg" id="regEmailErr"></div>
+        </div>
+        <div class="form-group">
+          <label for="regPassword">Password</label>
+          <input id="regPassword" type="password" placeholder="Min 6 characters" autocomplete="new-password" />
+          <button type="button" class="toggle-pw" data-target="regPassword" aria-label="Show password">👁</button>
+          <div class="error-msg" id="regPasswordErr"></div>
+        </div>
+        <div class="form-group">
+          <label for="regConfirm">Confirm Password</label>
+          <input id="regConfirm" type="password" placeholder="Re-enter your password" autocomplete="new-password" />
+          <button type="button" class="toggle-pw" data-target="regConfirm" aria-label="Show password">👁</button>
+          <div class="error-msg" id="regConfirmErr"></div>
+        </div>
+        <button type="submit" class="btn-primary" id="registerBtn">Create Account</button>
+        <div class="divider">— or —</div>
+        <button type="button" class="btn-google" id="registerGoogleBtn">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/>
+            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+            <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.4-4.5 2.4-7.2 2.4-5.3 0-9.7-3.4-11.3-8l-6.5 5C9.6 39.6 16.2 44 24 44z"/>
+            <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.7 2-2 3.7-3.7 5l6.2 5.2c-.4.4 6.2-4.5 6.2-14.2 0-1.3-.1-2.4-.4-3.5z"/>
+          </svg>
+          Continue with Google
+        </button>
+        <div class="text-sm text-center">Already have an account? <a id="showLogin">Login</a></div>
+      </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboardCard" class="card hidden dashboard">
+      <h2 style="margin-bottom: 14px;">👤 Dashboard</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="label">Username</div>
+          <div class="value" id="dashUsername">—</div>
+        </div>
+        <div class="info-item">
+          <div class="label">Email</div>
+          <div class="value" id="dashEmail">—</div>
+        </div>
+        <div class="info-item">
+          <div class="label">User ID</div>
+          <div class="value" id="dashId">—</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" id="btnProfile">My Profile</button>
+        <button class="btn-danger" id="btnLogout">Logout</button>
+      </div>
+
+      <h2 style="margin: 18px 0 4px;">🧪 API Tester</h2>
+      <div class="api-grid">
+        <button class="btn-secondary" data-endpoint="/api/users" data-method="GET">GET /users</button>
+        <button class="btn-secondary" data-endpoint="/api/stats" data-method="GET">GET /stats</button>
+        <button class="btn-secondary" data-endpoint="/api/products" data-method="GET">GET /products</button>
+        <button class="btn-secondary" data-endpoint="/health" data-method="GET">GET /health        <button class="btn-secondary" data-endpoint="/api/posts" data-method="GET">GET /posts</button>
+        <button class="btn-secondary" data-endpoint="/api/categories" data-method="GET">GET /categories</button>
+      </div>
+    </div>
+
+    <!-- Response -->
+    <div class="card mt-12">
+      <h2 style="margin-bottom:10px;">📡 Response</h2>
+      <pre id="responseOutput">No request made yet.</pre>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8000";
+
+    // Storage
+    const getToken  = () => localStorage.getItem("token");
+    const setToken  = (t) => localStorage.setItem("token", t);
+    const setUser   = (u) => localStorage.setItem("user", JSON.stringify(u));
+    const getUser   = () => JSON.parse(localStorage.getItem("user") || "null");
+    const clearAuth = () => { localStorage.removeItem("token"); localStorage.removeItem("user"); };
+
+    // Log response
+    function logResponse(data) {
+      document.getElementById("responseOutput").textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+    }
+
+    // Errors
+    function setError(inputId, message) {
+      const input = document.getElementById(inputId);
+      const err = document.getElementById(inputId + "Err");
+      if (input) input.classList.add("error");
+      if (err) { err.textContent = message; err.classList.add("show"); }
+    }
+    function clearError(inputId) {
+      const input = document.getElementById(inputId);
+      const err = document.getElementById(inputId + "Err");
+      if (input) input.classList.remove("error");
+      if (err) { err.textContent = ""; err.classList.remove("show"); }
+    }
+    function clearAllErrors(form) {
+      form.querySelectorAll(".error").forEach(el => el.classList.remove("error"));
+      form.querySelectorAll(".error-msg.show").forEach(el => { el.classList.remove("show"); el.textContent = ""; });
+    }
+
+    // Loading state
+    function setLoading(btn, isLoading) {
+      btn.disabled = isLoading;
+      if (isLoading) {
+        btn.dataset.text = btn.textContent;
+        btn.innerHTML = '<span class="spinner"></span> Loading...';
+      } else {
+        btn.textContent = btn.dataset.text || btn.textContent;
+      }
+    }
+
+    // Update auth UI
+    function updateAuthUI() {
+      const token = getToken();
+      const user = getUser();
+      const statusBar = document.getElementById("statusBar");
+      const authCard = document.getElementById("authCard");
+      const dashboard = document.getElementById("dashboardCard");
+      if (token && user) {
+        statusBar.textContent = `✅ Logged in as ${user.username || user.email} (${user.email || "unknown"})`;
+        statusBar.className = "status-bar logged-in";
+        authCard.classList.add("hidden");
+        dashboard.classList.remove("hidden");
+        document.getElementById("dashUsername").textContent = user.username || user.name || user.id;
+        document.getElementById("dashEmail").textContent = user.email || "—";
+        document.getElementById("dashId").textContent = user.id || user.userId || "—";
+      } else {
+        statusBar.textContent = "❌ Not authenticated";
+        statusBar.className = "status-bar logged-out";
+        authCard.classList.remove("hidden");
+        dashboard.classList.add("hidden");
+      }
+    }
+
+    // API call
+    async function apiCall(endpoint, method = "GET", body = null) {
+      const headers = { "Content-Type": "application/json" };
+      const token = getToken();
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+      const opts = { method, headers };
+      if (body) opts.body = JSON.stringify(body);
+      try {
+        const res = await fetch(`${API_BASE}${endpoint}`, opts);
+        const data = await res.json().catch(() => ({}));
+        logResponse({ status: res.status, ok: res.ok, data });
+        return { ok: res.ok, status: res.status, data };
+      } catch (e) {
+        logResponse({ error: e.message });
+        return { ok: false, error: e.message };
+      }
+    }
+
+    // Validation helpers
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    }
+    function validateName(name) {
+      return name.trim().length >= 2;
+    }
+    function validatePassword(pw) {
+      return pw.length >= 6;
+    }
+
+    // Tabs
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const show = tab.dataset.tab;
+        document.getElementById("loginForm").classList.toggle("hidden", show !== "login");
+        document.getElementById("registerForm").classList.toggle("hidden", show !== "register");
+        clearAllErrors(document.getElementById("loginForm"));
+        clearAllErrors(document.getElementById("registerForm"));
+      });
+    });
+
+    // Password visibility toggle
+    document.querySelectorAll(".toggle-pw").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = document.getElementById(btn.dataset.target);
+        if (target.type === "password") {
+          target.type = "text"; btn.textContent = "🙈";
+        } else {
+          target.type = "password"; btn.textContent = "👁";
+        }
+      });
+    });
+
+    // Link togglers
+    document.getElementById("showRegister").addEventListener("click", (e) => {
+      e.preventDefault(); document.querySelector('.tab[data-tab="register"]').click();
+    });
+    document.getElementById("showLogin").addEventListener("click", (e) => {
+      e.preventDefault(); document.querySelector('.tab[data-tab="login"]').click();
+    });
+
+    // Login submit
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearAllErrors(e.target);
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      let ok = true;
+      if (!validateEmail(email)) { setError("loginEmail", "Enter a valid email"); ok = false; }
+      if (!password) { setError("loginPassword", "Password required"); ok = false; }
+      if (!ok) return;
+      const btn = document.getElementById("loginBtn");
+      setLoading(btn, true);
+      const res = await apiCall("/api/users/login", "POST", { email, password });
+      setLoading(btn, false);
+      if (res.ok && res.data.token) {
+        setToken(res.data.token);
+        setUser(res.data.user || { username: res.data.user?.username || email.split("@")[0], email });
+        updateAuthUI();
+        logResponse("✅ Login successful — redirected to dashboard");
+      } else if (res.data?.message) {
+        setError("loginPassword", res.data.message);
+      }
+    });
+
+    // Register submit
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearAllErrors(e.target);
+      const name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value;
+      const confirm = document.getElementById("regConfirm").value;
+      let ok = true;
+      if (!validateName(name)) { setError("regName", "Name must be at least 2 characters"); ok = false; }
+      if (!validateEmail(email)) { setError("regEmail", "Enter a valid email"); ok = false; }
+      if (!validatePassword(password)) { setError("regPassword", "Password must be at least 6 characters"); ok = false; }
+      if (password !== confirm) { setError("regConfirm", "Passwords do not match"); ok = false; }
+      if (!ok) return;
+      const btn = document.getElementById("registerBtn");
+      setLoading(btn, true);
+      const res = await apiCall("/api/users", "POST", { username: name, email, password });
+      setLoading(btn, false);
+      if (res.ok && (res.data.token || res.data.user)) {
+        setToken(res.data.token || getToken());
+        setUser(res.data.user || res.data);
+        updateAuthUI();
+        logResponse("✅ Registration successful — redirected to dashboard");
+      } else if (res.data?.message) {
+        setError("regEmail", res.data.message);
+      }
+    });
+
+    // Logout
+    document.getElementById("btnLogout").addEventListener("click", () => {
+      clearAuth();
+      updateAuthUI();
+      logResponse("Logged out — token cleared from localStorage.");
+    });
+
+    // My Profile
+    document.getElementById("btnProfile").addEventListener("click", () => {
+      const user = getUser();
+      if (user?.id || user?.userId) apiCall("/api/users/" + (user.id || user.userId), "GET");
+      else apiCall("/api/stats", "GET");
+    });
+
+    // Google OAuth - redirect to backend auth endpoint
+    document.getElementById("loginGoogleBtn").addEventListener("click", () => {
+      window.location.href = `${API_BASE}/auth/google`;
+    });
+    document.getElementById("registerGoogleBtn").addEventListener("click", () => {
+      window.location.href = `${API_BASE}/auth/google`;
+    });
+
+    // API tester buttons
+    document.querySelectorAll("[data-endpoint]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        apiCall(btn.dataset.endpoint, btn.dataset.method);
+      });
+    });
+
+    // Init - handle Google OAuth token from URL hash
+    const hash = window.location.hash;
+    if (hash.startsWith('#token=')) {
+      const token = hash.substring(7);
+      setToken(token);
+      // Decode token to get user info (optional)
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUser(payload);
+      } catch (e) {
+        console.warn('Could not decode token payload');
+      }
+      // Clean up URL
+      window.history.replaceState('', document.title, window.location.pathname + window.location.search);
+    }
+    updateAuthUI();
+  </script>
+ 

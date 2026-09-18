@@ -1,0 +1,126 @@
+
+> bakend@1.0.0 start
+> nodemon src/index.js
+
+[33m[nodemon] 3.1.14[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+Server running on http://localhost:8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+Server running on http://localhost:8000
+C:\Users\TOSHIBA\OneDrive\Desktop\bakend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:142
+            const err = new MongooseError(message);
+                        ^
+
+MongooseError: Operation `products.countDocuments()` buffering timed out after 10000ms
+    at Timeout._onTimeout (C:\Users\TOSHIBA\OneDrive\Desktop\bakend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:142:25)
+    at listOnTimeout (node:internal/timers:635:17)
+    at process.processTimers (node:internal/timers:571:7)
+
+Node.js v24.19.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+Server running on http://localhost:8000
+C:\Users\TOSHIBA\OneDrive\Desktop\bakend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:142
+            const err = new MongooseError(message);
+                        ^
+
+MongooseError: Operation `products.countDocuments()` buffering timed out after 10000ms
+    at Timeout._onTimeout (C:\Users\TOSHIBA\OneDrive\Desktop\bakend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:142:25)
+    at listOnTimeout (node:internal/timers:635:17)
+    at process.processTimers (node:internal/timers:571:7)
+
+Node.js v24.19.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+Server running on http://localhost:8000
+C:\Users\TOSHIBA\OneDrive\Desktop\bakend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:142
+            const err = new MongooseError(message);
+                        ^
+
+MongooseError: Operation `products.countDocuments()` buffering timed out after 10000ms
+    at Timeout._onTimeout (C:\Users\TOSHIBA\OneDrive\Desktop\bakend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:142:25)
+    at listOnTimeout (node:internal/timers:635:17)
+    at process.processTimers (node:internal/timers:571:7)
+
+Node.js v24.19.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+Server running on http://localhost:8000
+C:\Users\TOSHIBA\OneDrive\Desktop\bakend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:142
+            const err = new MongooseError(message);
+                        ^
+
+MongooseError: Operation `products.countDocuments()` buffering timed out after 10000ms
+    at Timeout._onTimeout (C:\Users\TOSHIBA\OneDrive\Desktop\bakend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:142:25)
+    at listOnTimeout (node:internal/timers:635:17)
+    at process.processTimers (node:internal/timers:571:7)
+
+Node.js v24.19.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+📡 Mongoose connected to MongoDB
+✅ MongoDB Connected: ac-7yaapgu-shard-00-00.x8wrsms.mongodb.net
+Server running on http://localhost:8000
+✅ Seed products added to MongoDB
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+📡 Mongoose connected to MongoDB
+✅ MongoDB Connected: ac-7yaapgu-shard-00-00.x8wrsms.mongodb.net
+Server running on http://localhost:8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+📡 Mongoose connected to MongoDB
+✅ MongoDB Connected: ac-7yaapgu-shard-00-00.x8wrsms.mongodb.net
+Server running on http://localhost:8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+📡 Mongoose connected to MongoDB
+✅ MongoDB Connected: ac-7yaapgu-shard-00-00.x8wrsms.mongodb.net
+Server running on http://localhost:8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+📡 Mongoose connected to MongoDB
+✅ MongoDB Connected: ac-7yaapgu-shard-00-00.x8wrsms.mongodb.net
+Server running on http://localhost:8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }
+📡 Mongoose connected to MongoDB
+✅ MongoDB Connected: ac-7yaapgu-shard-00-00.x8wrsms.mongodb.net
+Server running on http://localhost:8000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/index.js`[39m
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+📡 Mongoose connected to MongoDB
+✅ MongoDB Connected: ac-7yaapgu-shard-00-00.x8wrsms.mongodb.net
+Server running on http://localhost:8000
